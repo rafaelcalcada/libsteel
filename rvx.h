@@ -128,25 +128,24 @@ typedef enum RvxTrapCauseCode
   RVX_EXCEPTION_STORE_AMO_PAGE_FAULT = 15U,          ///< Cause: Store/AMO page fault.
 
   // Interrupt codes (MSB set)
-  RVX_IRQ_MSI = (1U << 31) | 3U,      ///< Cause: M-mode Software Interrupt (MSI).
-  RVX_IRQ_MTI = (1U << 31) | 7U,      ///< Cause: M-mode Timer Interrupt (MTI).
-  RVX_IRQ_MEI = (1U << 31) | 11U,     ///< Cause: M-mode External Interrupt (MEI).
-  RVX_IRQ_FAST_0 = (1U << 31) | 16U,  ///< Cause: Fast-Interrupt 0
-  RVX_IRQ_FAST_1 = (1U << 31) | 17U,  ///< Cause: Fast-Interrupt 1
-  RVX_IRQ_FAST_2 = (1U << 31) | 18U,  ///< Cause: Fast-Interrupt 2
-  RVX_IRQ_FAST_3 = (1U << 31) | 19U,  ///< Cause: Fast-Interrupt 3
-  RVX_IRQ_FAST_4 = (1U << 31) | 20U,  ///< Cause: Fast-Interrupt 4
-  RVX_IRQ_FAST_5 = (1U << 31) | 21U,  ///< Cause: Fast-Interrupt 5
-  RVX_IRQ_FAST_6 = (1U << 31) | 22U,  ///< Cause: Fast-Interrupt 6
-  RVX_IRQ_FAST_7 = (1U << 31) | 23U,  ///< Cause: Fast-Interrupt 7
-  RVX_IRQ_FAST_8 = (1U << 31) | 24U,  ///< Cause: Fast-Interrupt 8
-  RVX_IRQ_FAST_9 = (1U << 31) | 25U,  ///< Cause: Fast-Interrupt 9
-  RVX_IRQ_FAST_10 = (1U << 31) | 26U, ///< Cause: Fast-Interrupt 10
-  RVX_IRQ_FAST_11 = (1U << 31) | 27U, ///< Cause: Fast-Interrupt 11
-  RVX_IRQ_FAST_12 = (1U << 31) | 28U, ///< Cause: Fast-Interrupt 12
-  RVX_IRQ_FAST_13 = (1U << 31) | 29U, ///< Cause: Fast-Interrupt 13
-  RVX_IRQ_FAST_14 = (1U << 31) | 30U, ///< Cause: Fast-Interrupt 14
-  RVX_IRQ_FAST_15 = (1U << 31) | 31U  ///< Cause: Fast-Interrupt 15
+  RVX_IRQ_MSI = (int)((1U << 31) | 3U),      ///< Cause: M-mode Software Interrupt (MSI).
+  RVX_IRQ_MTI = (int)((1U << 31) | 11U),     ///< Cause: M-mode External Interrupt (MEI).
+  RVX_IRQ_FAST_0 = (int)((1U << 31) | 16U),  ///< Cause: Fast-Interrupt 0
+  RVX_IRQ_FAST_1 = (int)((1U << 31) | 17U),  ///< Cause: Fast-Interrupt 1
+  RVX_IRQ_FAST_2 = (int)((1U << 31) | 18U),  ///< Cause: Fast-Interrupt 2
+  RVX_IRQ_FAST_3 = (int)((1U << 31) | 19U),  ///< Cause: Fast-Interrupt 3
+  RVX_IRQ_FAST_4 = (int)((1U << 31) | 20U),  ///< Cause: Fast-Interrupt 4
+  RVX_IRQ_FAST_5 = (int)((1U << 31) | 21U),  ///< Cause: Fast-Interrupt 5
+  RVX_IRQ_FAST_6 = (int)((1U << 31) | 22U),  ///< Cause: Fast-Interrupt 6
+  RVX_IRQ_FAST_7 = (int)((1U << 31) | 23U),  ///< Cause: Fast-Interrupt 7
+  RVX_IRQ_FAST_8 = (int)((1U << 31) | 24U),  ///< Cause: Fast-Interrupt 8
+  RVX_IRQ_FAST_9 = (int)((1U << 31) | 25U),  ///< Cause: Fast-Interrupt 9
+  RVX_IRQ_FAST_10 = (int)((1U << 31) | 26U), ///< Cause: Fast-Interrupt 10
+  RVX_IRQ_FAST_11 = (int)((1U << 31) | 27U), ///< Cause: Fast-Interrupt 11
+  RVX_IRQ_FAST_12 = (int)((1U << 31) | 28U), ///< Cause: Fast-Interrupt 12
+  RVX_IRQ_FAST_13 = (int)((1U << 31) | 29U), ///< Cause: Fast-Interrupt 13
+  RVX_IRQ_FAST_14 = (int)((1U << 31) | 30U), ///< Cause: Fast-Interrupt 14
+  RVX_IRQ_FAST_15 = (int)((1U << 31) | 31U)  ///< Cause: Fast-Interrupt 15
 } RvxTrapCauseCode;
 
 /// The direction of a GPIO pin.
@@ -573,9 +572,9 @@ static inline bool rvx_gpio_pin_read(RvxGpio *gpio_address, const uint8_t pin_in
 static inline void rvx_gpio_pin_write(RvxGpio *gpio_address, const uint8_t pin_index, bool value)
 {
   if (value)
-    rvx_gpio_pin_set(gpio_address, pin_index);
+    gpio_address->RVX_GPIO_SET_REG = 0x1U << pin_index;
   else
-    rvx_gpio_pin_clear(gpio_address, pin_index);
+    gpio_address->RVX_GPIO_CLEAR_REG = 0x1U << pin_index;
 }
 
 /**
