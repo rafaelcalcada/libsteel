@@ -1,13 +1,48 @@
+<p align="center"><img src="https://github.com/user-attachments/assets/cbb99dc9-c2e8-4234-bad7-8bbcfa434a30" width="100"/></p>
+
 ## About RVX HAL
 
-**RVX HAL** is a **header-only C library** that provides a **Hardware Abstraction Layer (HAL)** for RVX peripherals, including SPI, GPIO, and UART interfaces. It also offers a convenient API for interacting with the control and status registers in the RVX processor core.
+**RVX HAL** is a header-only C library that provides a Hardware Abstraction Layer (HAL) for RVX peripherals, including SPI, GPIO, and UART. It also offers a clean API for accessing control and status registers in the RVX processor core.
 
-RVX HAL lets developers access RVX peripherals and control/status registers in a consistent, high-level way, eliminating direct hardware register manipulation and making embedded code more portable, maintainable, and reliable.
+By using RVX HAL, developers can interact with RVX hardware through a consistent, high-level interface - eliminating the need for manual register manipulation and improving portability, maintainability, and overall code clarity.
 
-### Key features
-- **Header-only C library**: No separate compilation or linking required - just include the headers.  
-- **Peripheral abstraction**: Simplifies access to SPI, GPIO, UART, and other RVX devices.  
-- **Access to core registers**: Provides clean APIs for reading and writing RVX processor core registers.  
-- **Lightweight and portable**: Designed for minimal footprint and easy integration into existing projects.
+### Key Features
+- **Header-only design** – No separate compilation or linking required.  
+- **Peripheral abstraction** – Unified APIs for SPI, GPIO, UART, and other RVX peripherals.  
+- **Core register access** – Simple functions for reading and writing RVX processor registers.  
+- **Lightweight and portable** – Easy to integrate with minimal footprint.
+
+## How to Use
+
+You can integrate RVX HAL into your project in one of two ways: **direct include** or **CMake integration**.
+
+### 1. Direct include
+
+Copy the main header file **`rvx.h`** into your project and include it from your source files:
+
+```c
+#include "rvx.h"
+```
+
+Because the HAL is header-only, no additional build steps are needed.
+
+### 2. CMake integration
+
+If your project uses CMake, you can also fetch and include the latest version of RVX HAL automatically using CMake’s `FetchContent` module:
+
+```cmake
+include(FetchContent)
+
+FetchContent_Declare(rvx
+  GIT_REPOSITORY https://github.com/rafaelcalcada/rvx-hal.git
+  GIT_TAG latest
+)
+
+FetchContent_MakeAvailable(rvx)
+
+target_link_libraries(your_app_target rvx)
+```
+
+After this, `rvx.h` becomes available for inclusion just like any other header.
 
 For detailed documentation and usage examples, see the [RVX Documentation](https://rafaelcalcada.github.io/rvx).
