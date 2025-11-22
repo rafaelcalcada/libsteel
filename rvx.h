@@ -198,10 +198,10 @@ typedef struct RVX_ALIGNED RvxTimer
 /// Provide access to UART registers.
 typedef struct RVX_ALIGNED RvxUart
 {
-  volatile uint32_t RVX_UART_WRITE_REG;   ///< RVX UART Write Register.
-  volatile uint32_t RVX_UART_READ_REG;    ///< RVX UART Read Register.
-  volatile uint32_t RVX_UART_STATUS_REG;  ///< RVX UART Status Register.
-  volatile uint32_t RVX_UART_CONTROL_REG; ///< RVX UART Control Register.
+  volatile uint32_t RVX_UART_WRITE_REG;  ///< RVX UART Write Register.
+  volatile uint32_t RVX_UART_READ_REG;   ///< RVX UART Read Register.
+  volatile uint32_t RVX_UART_STATUS_REG; ///< RVX UART Status Register.
+  volatile uint32_t RVX_UART_BAUD_REG;   ///< RVX UART Baud Rate Configuration Register.
 } RvxUart;
 
 /**
@@ -1157,6 +1157,44 @@ static inline void rvx_uart_write_string(RvxUart *uart_address, const char *c_st
   {
     rvx_uart_write(uart_address, *c_str++);
   }
+}
+
+/**
+ * @brief Initialize the UART with a specified baud rate.
+ *
+ * This function configures the UART's baud rate by writing the number of clock cycles
+ * per baud into the UART baud configuration register. The required value for
+ * `cycles_per_baud` can be calculated using:
+ *
+ * ```
+ * cycles_per_baud = f_clock / desired_baud_rate
+ * ```
+ *
+ * For example, if the system clock is 50 MHz and the desired baud rate is 115200, then:
+ *
+ * ```
+ * cycles_per_baud = 50000000 / 115200 ~= 434
+ * ```
+ *
+ * After initialization, the UART will transmit and receive data at the configured
+ * baud rate. This function does not modify any other UART settings.
+ *
+ * Example usage:
+ *
+ * ```c
+ * // Assume UART is mapped at address 0x80000000
+ * RvxUart *uart_address = (RvxUart *)0x80000000;
+ *
+ * // Initialize UART for 115200 baud with a 50 MHz clock
+ * rvx_uart_init(uart_address, 50000000 / 115200);
+ * ```
+ *
+ * @param uart_address Pointer to the base address of the UART peripheral.
+ * @param cycles_per_baud Number of clock cycles per baud (`f_clock / desired_baud_rate`).
+ */
+static inline void rvx_uart_init(RvxUart *uart_address, uint32_t cycles_per_baud)
+{
+  uart_address->RVX_UART_BAUD_REG = cycles_per_baud;
 }
 
 #endif // RVX_HAL_H
